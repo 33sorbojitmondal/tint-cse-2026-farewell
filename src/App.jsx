@@ -7,7 +7,6 @@ import Story from './components/Story'
 import Stats from './components/Stats'
 import Awards from './components/Awards'
 import Gallery from './components/Gallery'
-import Friends from './components/Friends'
 import SlamBook from './components/SlamBook'
 import HallOfMemory from './components/HallOfMemory'
 import VideoSection from './components/VideoSection'
@@ -44,7 +43,6 @@ export default function App() {
         <Stats />
         <Awards />
         <Gallery />
-        <Friends />
         <SlamBook />
         <HallOfMemory />
         <VideoSection />

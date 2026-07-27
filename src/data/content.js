@@ -19,7 +19,6 @@ export const navigation = [
   { id: 'story', label: 'Our Story' },
   { id: 'memories', label: 'Memories' },
   { id: 'hall', label: 'AR Hall' },
-  { id: 'friends', label: 'Friends' },
   { id: 'slam-book', label: 'Slam Book' },
   { id: 'creators', label: 'Creators' },
   { id: 'the-end', label: 'The End' },
