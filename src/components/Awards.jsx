@@ -15,7 +15,7 @@ export default function Awards() {
           subtitle="Six CRs across CSE1, CSE2, and CSE3 — the leaders who carried our voice, our chaos, and our care."
         />
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {awards.map((award, i) => {
             const isOpen = active === award.id
             return (
@@ -34,23 +34,24 @@ export default function Awards() {
                 }`}
                 aria-expanded={isOpen}
               >
-                <div className="relative aspect-[4/3] overflow-hidden">
+                {/* Portrait frame — faces stay fully visible */}
+                <div className="relative mx-auto mt-6 h-44 w-44 overflow-hidden rounded-full border-2 border-accent/35 bg-ink shadow-[0_0_0_6px_rgba(196,165,116,0.08)] sm:h-48 sm:w-48">
                   <LazyImage
                     src={award.photo}
                     alt={award.name}
-                    className="h-full w-full object-cover object-top transition duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover object-center transition duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
-                  <div className="absolute left-4 top-4 rounded-full border border-accent/40 bg-ink/70 px-3 py-1 text-[10px] tracking-[0.22em] uppercase text-accent backdrop-blur-sm">
+                  <div className="absolute left-1/2 top-3 -translate-x-1/2 rounded-full border border-accent/40 bg-ink/80 px-2.5 py-0.5 text-[9px] tracking-[0.2em] uppercase text-accent backdrop-blur-sm">
                     {award.section}
-                  </div>
-                  <div className="absolute inset-x-0 bottom-0 p-4">
-                    <p className="text-[10px] tracking-[0.2em] uppercase text-accent">{award.tenure}</p>
-                    <h3 className="mt-1 font-display text-2xl text-cream">{award.name}</h3>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 px-5 py-4">
+                <div className="px-5 pb-2 pt-5 text-center">
+                  <p className="text-[10px] tracking-[0.22em] uppercase text-accent">{award.tenure}</p>
+                  <h3 className="mt-1.5 font-display text-2xl text-cream">{award.name}</h3>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 px-5 pb-4 pt-1">
                   <p className="text-sm text-cream-muted">{award.section} · CR</p>
                   <span className="text-cream-dim transition group-hover:text-accent">
                     {isOpen ? '−' : '+'}
@@ -66,7 +67,7 @@ export default function Awards() {
                       transition={{ duration: 0.35 }}
                       className="overflow-hidden"
                     >
-                      <p className="border-t border-ink-border/60 px-5 pb-5 pt-4 text-sm font-light leading-relaxed text-cream-muted">
+                      <p className="border-t border-ink-border/60 px-5 pb-5 pt-4 text-center text-sm font-light leading-relaxed text-cream-muted">
                         {award.description}
                       </p>
                     </motion.div>
