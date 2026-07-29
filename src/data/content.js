@@ -174,7 +174,7 @@ export const awards = [
     section: 'CSE1',
     tenure: 'Class Representative',
     name: 'Piyush Goenka',
-    photo: p('friend-piyush.jpg'),
+    photo: p('crs/cr-piyush.jpg'),
     description:
       'Carried CSE1’s voice with calm confidence — deadlines, doubts, and department drama included.',
   },
@@ -183,7 +183,7 @@ export const awards = [
     section: 'CSE1',
     tenure: 'Class Representative',
     name: 'Sagarika Sarkar',
-    photo: p('wa-lawn-selfie.jpg'),
+    photo: p('crs/cr-sagarika.jpg'),
     description:
       'Made every notice feel personal and every problem feel shared. CSE1’s steady bridge.',
   },
@@ -192,7 +192,7 @@ export const awards = [
     section: 'CSE2',
     tenure: 'Class Representative',
     name: 'Arya Mukherjee',
-    photo: p('wa-college-hall.jpg'),
+    photo: p('crs/cr-arya.jpg'),
     description:
       'Handled Year II chaos like a plan — so the batch could keep moving forward together.',
   },
@@ -201,7 +201,7 @@ export const awards = [
     section: 'CSE2',
     tenure: 'Class Representative',
     name: 'Shreya Mohanty',
-    photo: p('wa-girls-talk.jpg'),
+    photo: p('crs/cr-shreya.jpg'),
     description:
       'Turned group panic into plans. Quiet leadership, loud results for CSE2.',
   },
@@ -210,7 +210,7 @@ export const awards = [
     section: 'CSE3',
     tenure: 'Class Representative',
     name: 'Anuska Ghosh',
-    photo: p('batch-smile.jpg'),
+    photo: p('crs/cr-anushka.jpg'),
     description:
       'Protected the spirit of the batch through the hardest years — with grace and grit.',
   },
@@ -219,7 +219,7 @@ export const awards = [
     section: 'CSE3',
     tenure: 'Class Representative',
     name: 'Yuvraj Prasad',
-    photo: p('cse-wall-group.jpg'),
+    photo: p('crs/cr-yuvraj.jpg'),
     description:
       'Stood between us and the storm — projects, placements, farewells — and never dropped the baton.',
   },

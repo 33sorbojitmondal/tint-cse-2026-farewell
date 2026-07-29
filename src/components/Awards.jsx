@@ -38,7 +38,7 @@ export default function Awards() {
                   <LazyImage
                     src={award.photo}
                     alt={award.name}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover object-top transition duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
                   <div className="absolute left-4 top-4 rounded-full border border-accent/40 bg-ink/70 px-3 py-1 text-[10px] tracking-[0.22em] uppercase text-accent backdrop-blur-sm">

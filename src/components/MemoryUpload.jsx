@@ -44,12 +44,12 @@ export default function MemoryUpload({ onUploaded }) {
   const onPick = (e) => {
     const next = e.target.files?.[0]
     if (!next) return
-    if (!next.type.startsWith('image/')) {
-      setError('Please choose an image file.')
+    if (!next.type.startsWith('image/') && !/\.(jpe?g|png|webp|gif|heic|heif)$/i.test(next.name)) {
+      setError('Please choose an image (JPG, PNG, WEBP, or HEIC).')
       return
     }
     if (next.size > 10 * 1024 * 1024) {
-      setError('Keep images under 10MB.')
+      setError('Keep images under 10MB (Cloudinary free plan limit).')
       return
     }
     setError('')

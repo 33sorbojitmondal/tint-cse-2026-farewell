@@ -6,7 +6,8 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
-  res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=120')
+  res.setHeader('Cache-Control', 's-maxage=15, stale-while-revalidate=60')
+  res.setHeader('Content-Type', 'application/json')
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
@@ -27,18 +28,35 @@ export default async function handler(req, res) {
 
   try {
     const auth = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64')
-    const url = new URL(`https://api.cloudinary.com/v1_1/${cloudName}/resources/by_tag/${encodeURIComponent(tag)}`)
+    // Correct Admin API path: /resources/{resource_type}/tags/{tag}
+    const url = new URL(
+      `https://api.cloudinary.com/v1_1/${cloudName}/resources/image/tags/${encodeURIComponent(tag)}`
+    )
     url.searchParams.set('max_results', '100')
     url.searchParams.set('context', 'true')
     url.searchParams.set('tags', 'true')
 
     const response = await fetch(url, {
-      headers: { Authorization: `Basic ${auth}` },
+      headers: {
+        Authorization: `Basic ${auth}`,
+        Accept: 'application/json',
+      },
     })
 
-    const data = await response.json()
+    const text = await response.text()
+    let data
+    try {
+      data = JSON.parse(text)
+    } catch {
+      return res.status(502).json({
+        configured: true,
+        error: 'Cloudinary returned a non-JSON response',
+        resources: [],
+      })
+    }
+
     if (!response.ok) {
-      return res.status(response.status).json({
+      return res.status(200).json({
         configured: true,
         error: data.error?.message || 'Cloudinary error',
         resources: [],
@@ -57,11 +75,12 @@ export default async function handler(req, res) {
         context: r.context,
         tags: r.tags,
         filename: r.filename || r.public_id.split('/').pop(),
+        original_filename: r.original_filename,
       }))
 
     return res.status(200).json({ configured: true, resources })
   } catch (err) {
-    return res.status(500).json({
+    return res.status(200).json({
       configured: true,
       error: err.message || 'Failed to load memories',
       resources: [],

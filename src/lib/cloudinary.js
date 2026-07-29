@@ -1,12 +1,16 @@
 /**
  * Cloudinary helpers for community memory uploads.
- * Client upload uses an unsigned preset (safe in the browser).
- * Listing prefers /api/memories (Vercel + API secret); falls back to tag list JSON.
+ *
+ * Public cloud name + unsigned preset are safe in the browser.
+ * Hardcoded fallbacks avoid Vercel "Sensitive" env vars being omitted from Vite builds.
  */
 
-const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || ''
-const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || ''
-const galleryTag = import.meta.env.VITE_CLOUDINARY_TAG || 'tint_cse_memories'
+const cloudName =
+  import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'zdsvkmo7'
+const uploadPreset =
+  import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'tint_memories_unsigned'
+const galleryTag =
+  import.meta.env.VITE_CLOUDINARY_TAG || 'tint_cse_memories'
 
 export function isCloudinaryConfigured() {
   return Boolean(cloudName && uploadPreset)
@@ -20,6 +24,7 @@ function mapResource(r) {
   const caption =
     r.context?.custom?.caption ||
     r.context?.caption ||
+    r.original_filename?.replace(/[_-]/g, ' ') ||
     r.filename?.replace(/[_-]/g, ' ') ||
     'A memory from the batch'
   const publicId = r.public_id
@@ -44,17 +49,19 @@ export async function fetchCommunityMemories() {
   if (!cloudName) return []
 
   try {
-    const apiRes = await fetch('/api/memories')
+    const apiRes = await fetch('/api/memories', { cache: 'no-store' })
     if (apiRes.ok) {
       const data = await apiRes.json()
       if (data.configured === false) {
         // fall through to public list
-      } else if (Array.isArray(data.resources)) {
+      } else if (Array.isArray(data.resources) && data.resources.length > 0) {
         return data.resources.map(mapResource)
+      } else if (!data.error && Array.isArray(data.resources)) {
+        // Valid empty result — still try public list as backup
       }
     }
   } catch {
-    // ignore — try public list
+    // fall through
   }
 
   try {
@@ -64,13 +71,16 @@ export async function fetchCommunityMemories() {
     )
     if (!listRes.ok) return []
     const data = await listRes.json()
-    return (data.resources || []).map((r) =>
-      mapResource({
-        ...r,
-        public_id: r.public_id,
-        secure_url: `https://res.cloudinary.com/${cloudName}/image/upload/${r.public_id}.${r.format}`,
-      })
-    )
+    return (data.resources || [])
+      .slice()
+      .reverse()
+      .map((r) =>
+        mapResource({
+          ...r,
+          public_id: r.public_id,
+          secure_url: `https://res.cloudinary.com/${cloudName}/image/upload/${r.public_id}.${r.format}`,
+        })
+      )
   } catch {
     return []
   }
@@ -78,8 +88,7 @@ export async function fetchCommunityMemories() {
 
 /**
  * Unsigned client upload.
- * @param {File} file
- * @param {{ caption?: string, onProgress?: (pct: number) => void }} options
+ * Preset is unsigned; tags are required so /api/memories can find the image.
  */
 export function uploadMemory(file, { caption = '', onProgress } = {}) {
   if (!isCloudinaryConfigured()) {
@@ -90,10 +99,10 @@ export function uploadMemory(file, { caption = '', onProgress } = {}) {
     const form = new FormData()
     form.append('file', file)
     form.append('upload_preset', uploadPreset)
-    form.append('folder', 'tint-cse-2026/memories')
     form.append('tags', `${galleryTag},community`)
-    if (caption.trim()) {
-      form.append('context', `caption=${caption.trim().replace(/[=|]/g, ' ')}`)
+    const cleanCaption = caption.trim().replace(/[=|]/g, ' ')
+    if (cleanCaption) {
+      form.append('context', `caption=${cleanCaption}`)
     }
 
     const xhr = new XMLHttpRequest()
@@ -109,9 +118,18 @@ export function uploadMemory(file, { caption = '', onProgress } = {}) {
       try {
         const data = JSON.parse(xhr.responseText)
         if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(mapResource(data))
+          resolve(
+            mapResource({
+              ...data,
+              context: {
+                custom: {
+                  caption: cleanCaption || data.original_filename || 'A memory from the batch',
+                },
+              },
+            })
+          )
         } else {
-          reject(new Error(data.error?.message || 'Upload failed'))
+          reject(new Error(data.error?.message || `Upload failed (${xhr.status})`))
         }
       } catch {
         reject(new Error('Upload failed'))
