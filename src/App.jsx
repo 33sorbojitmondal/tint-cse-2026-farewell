@@ -7,11 +7,11 @@ import Story from './components/Story'
 import Stats from './components/Stats'
 import Awards from './components/Awards'
 import Gallery from './components/Gallery'
-import SlamBook from './components/SlamBook'
 import HallOfMemory from './components/HallOfMemory'
 import VideoSection from './components/VideoSection'
 import Creators from './components/Creators'
 import Finale from './components/Finale'
+import BestOfLuck from './components/BestOfLuck'
 import EasterEggs from './components/EasterEggs'
 import PhotoLightbox from './components/PhotoLightbox'
 import { useScrollProgress } from './hooks/useScrollProgress'
@@ -43,11 +43,11 @@ export default function App() {
         <Stats />
         <Awards />
         <Gallery />
-        <SlamBook />
         <HallOfMemory />
         <VideoSection />
         <Creators />
         <Finale />
+        <BestOfLuck />
       </main>
 
       <footer className="border-t border-ink-border/50 px-5 py-10 text-center">

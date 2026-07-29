@@ -9,6 +9,9 @@ export const site = {
   tagline: 'We came here as strangers. We leave as a story.',
   finaleLine1: 'This is not goodbye. This is just the end of our first chapter.',
   finaleLine2: 'Wherever life takes us, a part of us will always be here.',
+  bestOfLuckTitle: 'Best of luck for the future',
+  bestOfLuckLine:
+    'May every door ahead open with the same courage we found together — and may TINT CSE always walk with you.',
   secretCode: 'chai break',
   secretMessage:
     'Remember the signed shirts, the project folders, and the last walk across campus? That was the day we stopped being classmates and became a forever story.',
@@ -19,9 +22,9 @@ export const navigation = [
   { id: 'story', label: 'Our Story' },
   { id: 'memories', label: 'Memories' },
   { id: 'hall', label: 'AR Hall' },
-  { id: 'slam-book', label: 'Slam Book' },
   { id: 'creators', label: 'Creators' },
   { id: 'the-end', label: 'The End' },
+  { id: 'best-of-luck', label: 'Best of Luck' },
 ]
 
 /** Farewell soundtrack — files in /public/audio */
@@ -164,69 +167,61 @@ export const stats = [
   { id: 'memories', label: 'Memories Created', value: 10000, suffix: '+' },
 ]
 
+/** Unofficial honors — the 6 Class Representatives of CSE */
 export const awards = [
   {
-    id: 'late',
-    title: 'Most Likely to Be Late',
-    name: 'The Always-Rushing Squad',
-    photo: p('trio-campus.jpg'),
-    description: 'Arrived fashionably late to every class — and somehow always had the best excuse.',
+    id: 'cr1',
+    title: 'Voice of Year I',
+    tenure: '1st Year · Boys’ CR',
+    name: 'Class Representative',
+    photo: p('wa-lab-desk.jpg'),
+    description:
+      'Carried our first-year chaos to the faculty with a calm smile — and brought answers back to the batch.',
   },
   {
-    id: 'canteen',
-    title: 'Canteen Kings & Queens',
-    name: 'Plaza Crew',
-    photo: p('friends-plaza.jpg'),
-    description: 'Knew every order by heart. Negotiated extra shares like diplomats.',
+    id: 'cr2',
+    title: 'Heart of Year I',
+    tenure: '1st Year · Girls’ CR',
+    name: 'Class Representative',
+    photo: p('wa-lawn-selfie.jpg'),
+    description:
+      'Made every notice feel personal and every problem feel shared. The bridge that held Year I together.',
   },
   {
-    id: 'savior',
-    title: 'Assignment Saviors',
-    name: 'Classroom Trio',
-    photo: p('early-farewell.jpg'),
-    description: 'Submitted with minutes to spare — then helped half the batch do the same.',
+    id: 'cr3',
+    title: 'Steady Hand · Year II',
+    tenure: '2nd Year · Boys’ CR',
+    name: 'Class Representative',
+    photo: p('wa-college-hall.jpg'),
+    description:
+      'Handled deadlines, doubts, and department drama like a pro — so the rest of us could keep laughing.',
   },
   {
-    id: 'sleep',
-    title: 'Sleep Champions',
-    name: 'Corridor Collective',
-    photo: p('hallway-friends.jpg'),
-    description: 'Could rest through chaos and still wake up for viva.',
+    id: 'cr4',
+    title: 'Grace Under Pressure',
+    tenure: '2nd Year · Girls’ CR',
+    name: 'Class Representative',
+    photo: p('wa-girls-talk.jpg'),
+    description:
+      'Turned group panic into plans. Quiet leadership, loud results — Year II’s unofficial compass.',
   },
   {
-    id: 'photo',
-    title: 'Group Photographers',
-    name: 'Batch Lens',
-    photo: p('batch-mega.jpg'),
-    description: 'If it happened, it was captured. Our unofficial archivists of chaos.',
-  },
-  {
-    id: 'meme',
-    title: 'Meme Lords',
-    name: 'Casual Five',
-    photo: p('casual-five.jpg'),
-    description: 'Turned every exam stress into a group-chat legend.',
-  },
-  {
-    id: 'ceo',
-    title: 'Future CEOs',
-    name: 'CSE Wall Squad',
+    id: 'cr5',
+    title: 'Anchor of the Batch',
+    tenure: '3rd–4th Year · Boys’ CR',
+    name: 'Class Representative',
     photo: p('cse-wall-group.jpg'),
-    description: 'Led projects with terrifying efficiency. We were just the first team.',
+    description:
+      'Stood between us and the storm — placements, projects, farewells — and never dropped the baton.',
   },
   {
-    id: 'chaos',
-    title: 'Most Chaotic',
-    name: 'Farewell Five',
-    photo: p('farewell-crowd.jpg'),
-    description: 'Walked into rooms like a plot twist. Never a dull farewell with them around.',
-  },
-  {
-    id: 'missing',
-    title: 'Always Missing',
-    name: 'Found Eventually',
-    photo: p('selfie-five.jpg'),
-    description: 'Present in spirit. Located via group chat. Still somehow in every photo.',
+    id: 'cr6',
+    title: 'Keeper of the Flame',
+    tenure: '3rd–4th Year · Girls’ CR',
+    name: 'Class Representative',
+    photo: p('batch-smile.jpg'),
+    description:
+      'Protected the spirit of CSE till the last bell. The leader who made “batch” feel like family.',
   },
 ]
 
@@ -310,64 +305,6 @@ export const friends = [
     dialogue: '"One last class photo."',
     funniest: 'The photographer yelled freeze. We laughed anyway.',
     message: 'Wherever we go, a part of us stays here.',
-  },
-]
-
-export const slamPrompts = [
-  { id: 'miss', label: 'What will you miss most?' },
-  { id: 'favorite', label: 'Your favorite memory?' },
-  { id: 'secret', label: 'One thing you never told us?' },
-  { id: 'future', label: 'Where do you see yourself in 10 years?' },
-]
-
-export const slamEntries = [
-  {
-    id: 's1',
-    author: 'Piyush',
-    promptId: 'miss',
-    answer: 'Walking into TINT and knowing someone from CSE would already be waiting.',
-  },
-  {
-    id: 's2',
-    author: 'Sorbojit',
-    promptId: 'favorite',
-    answer: 'Farewell day — soft light, and the whole batch in one frame.',
-  },
-  {
-    id: 's3',
-    author: 'Batch',
-    promptId: 'secret',
-    answer: 'We pretended bunks were strategy. Really, we just needed each other.',
-  },
-  {
-    id: 's4',
-    author: 'CSE',
-    promptId: 'future',
-    answer: 'Somewhere with good chai, a group chat that never dies, and TINT still in our stories.',
-  },
-  {
-    id: 's5',
-    author: 'Friend',
-    promptId: 'miss',
-    answer: 'The yellow corridors, the CSE wall, and being found when we were lost.',
-  },
-  {
-    id: 's6',
-    author: 'Squad',
-    promptId: 'favorite',
-    answer: 'Every group photo that took forever — and somehow became perfect.',
-  },
-  {
-    id: 's7',
-    author: 'Plaza Crew',
-    promptId: 'secret',
-    answer: 'The plaza meets fixed more bad days than any lecture.',
-  },
-  {
-    id: 's8',
-    author: 'Batch 2026',
-    promptId: 'future',
-    answer: 'Still causing gentle chaos — hopefully with better Wi-Fi.',
   },
 ]
 
