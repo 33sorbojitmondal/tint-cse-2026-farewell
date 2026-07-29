@@ -170,58 +170,58 @@ export const stats = [
 /** Unofficial honors — the 6 Class Representatives of CSE */
 export const awards = [
   {
-    id: 'cr1',
-    title: 'Voice of Year I',
-    tenure: '1st Year · Boys’ CR',
-    name: 'Class Representative',
-    photo: p('wa-lab-desk.jpg'),
+    id: 'cr-piyush',
+    section: 'CSE1',
+    tenure: 'Class Representative',
+    name: 'Piyush Goenka',
+    photo: p('friend-piyush.jpg'),
     description:
-      'Carried our first-year chaos to the faculty with a calm smile — and brought answers back to the batch.',
+      'Carried CSE1’s voice with calm confidence — deadlines, doubts, and department drama included.',
   },
   {
-    id: 'cr2',
-    title: 'Heart of Year I',
-    tenure: '1st Year · Girls’ CR',
-    name: 'Class Representative',
+    id: 'cr-sagarika',
+    section: 'CSE1',
+    tenure: 'Class Representative',
+    name: 'Sagarika Sarkar',
     photo: p('wa-lawn-selfie.jpg'),
     description:
-      'Made every notice feel personal and every problem feel shared. The bridge that held Year I together.',
+      'Made every notice feel personal and every problem feel shared. CSE1’s steady bridge.',
   },
   {
-    id: 'cr3',
-    title: 'Steady Hand · Year II',
-    tenure: '2nd Year · Boys’ CR',
-    name: 'Class Representative',
+    id: 'cr-arya',
+    section: 'CSE2',
+    tenure: 'Class Representative',
+    name: 'Arya Mukherjee',
     photo: p('wa-college-hall.jpg'),
     description:
-      'Handled deadlines, doubts, and department drama like a pro — so the rest of us could keep laughing.',
+      'Handled Year II chaos like a plan — so the batch could keep moving forward together.',
   },
   {
-    id: 'cr4',
-    title: 'Grace Under Pressure',
-    tenure: '2nd Year · Girls’ CR',
-    name: 'Class Representative',
+    id: 'cr-shreya',
+    section: 'CSE2',
+    tenure: 'Class Representative',
+    name: 'Shreya Mohanty',
     photo: p('wa-girls-talk.jpg'),
     description:
-      'Turned group panic into plans. Quiet leadership, loud results — Year II’s unofficial compass.',
+      'Turned group panic into plans. Quiet leadership, loud results for CSE2.',
   },
   {
-    id: 'cr5',
-    title: 'Anchor of the Batch',
-    tenure: '3rd–4th Year · Boys’ CR',
-    name: 'Class Representative',
-    photo: p('cse-wall-group.jpg'),
-    description:
-      'Stood between us and the storm — placements, projects, farewells — and never dropped the baton.',
-  },
-  {
-    id: 'cr6',
-    title: 'Keeper of the Flame',
-    tenure: '3rd–4th Year · Girls’ CR',
-    name: 'Class Representative',
+    id: 'cr-anuska',
+    section: 'CSE3',
+    tenure: 'Class Representative',
+    name: 'Anuska Ghosh',
     photo: p('batch-smile.jpg'),
     description:
-      'Protected the spirit of CSE till the last bell. The leader who made “batch” feel like family.',
+      'Protected the spirit of the batch through the hardest years — with grace and grit.',
+  },
+  {
+    id: 'cr-yuvraj',
+    section: 'CSE3',
+    tenure: 'Class Representative',
+    name: 'Yuvraj Prasad',
+    photo: p('cse-wall-group.jpg'),
+    description:
+      'Stood between us and the storm — projects, placements, farewells — and never dropped the baton.',
   },
 ]
 

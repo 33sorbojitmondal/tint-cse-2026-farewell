@@ -12,7 +12,7 @@ export default function Awards() {
         <SectionHeading
           eyebrow="Unofficial Honors"
           title="The Class Representatives"
-          subtitle="Six CRs. One CSE batch. The leaders who carried our voice, our chaos, and our care — year after year."
+          subtitle="Six CRs across CSE1, CSE2, and CSE3 — the leaders who carried our voice, our chaos, and our care."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -37,21 +37,21 @@ export default function Awards() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <LazyImage
                     src={award.photo}
-                    alt={award.tenure}
+                    alt={award.name}
                     className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
                   <div className="absolute left-4 top-4 rounded-full border border-accent/40 bg-ink/70 px-3 py-1 text-[10px] tracking-[0.22em] uppercase text-accent backdrop-blur-sm">
-                    CR · {String(i + 1).padStart(2, '0')}
+                    {award.section}
                   </div>
                   <div className="absolute inset-x-0 bottom-0 p-4">
                     <p className="text-[10px] tracking-[0.2em] uppercase text-accent">{award.tenure}</p>
-                    <h3 className="mt-1 font-display text-2xl text-cream">{award.title}</h3>
+                    <h3 className="mt-1 font-display text-2xl text-cream">{award.name}</h3>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 px-5 py-4">
-                  <p className="text-sm text-cream-muted">{award.name}</p>
+                  <p className="text-sm text-cream-muted">{award.section} · CR</p>
                   <span className="text-cream-dim transition group-hover:text-accent">
                     {isOpen ? '−' : '+'}
                   </span>
