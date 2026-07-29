@@ -9,7 +9,6 @@ import 'yet-another-react-lightbox/plugins/thumbnails.css'
 import { gallery, galleryFilters } from '../data/content'
 import { fetchCommunityMemories } from '../lib/cloudinary'
 import { LazyImage, SectionHeading } from './ui'
-import MemoryUpload from './MemoryUpload'
 
 const PAGE_SIZE = 12
 
@@ -65,22 +64,14 @@ export default function Gallery() {
     [filtered]
   )
 
-  const handleUploaded = (photo) => {
-    setCommunity((prev) => [photo, ...prev.filter((p) => p.id !== photo.id)])
-    setFilter('community')
-    setVisible(PAGE_SIZE)
-  }
-
   return (
     <section id="memories" className="book-perspective px-5 py-[var(--spacing-section)] md:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="The Archive"
           title="Memories"
-          subtitle="An editorial collage of the moments that refuse to fade — plus new ones the batch uploads."
+          subtitle="An editorial collage of the moments that refuse to fade. Filter, wander, open, remember."
         />
-
-        <MemoryUpload onUploaded={handleUploaded} />
 
         <div className="mb-10 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {filters.map((f) => (
