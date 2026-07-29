@@ -90,7 +90,7 @@ export const chapters = [
     photos: [
       { id: 'y3-1', src: p('wa-seminar-batch.jpg'), caption: 'Seminar hall. Matching polos. Shared pride.', tags: ['friends', 'faculty'], year: '3', location: 'auditorium' },
       { id: 'y3-2', src: p('wa-trip-group.jpg'), caption: 'The trip that became a core memory.', tags: ['trips', 'friends'], year: '3', polaroid: true, rotate: -2 },
-      { id: 'y3-3', src: p('wa-fest-selfie.jpg'), caption: 'Fest day. Crowd behind. Us in the frame.', tags: ['college-fest', 'chaos'], year: '3' },
+      { id: 'y3-3', src: p('featured/feat-campus-wide.jpg'), caption: 'Court day. The whole crew under one sky.', tags: ['college-fest', 'friends'], year: '3' },
     ],
   },
   {
@@ -100,14 +100,27 @@ export const chapters = [
     subtitle: 'Final projects, farewell poses, and holding on a little tighter.',
     body: 'We counted remaining Mondays. Group photos got longer. Every ordinary walk across TINT felt borrowed.',
     photos: [
-      { id: 'y4-1', src: p('batch-uniform.jpg'), caption: 'The class that became a family.', tags: ['farewell', 'friends'], year: '4' },
-      { id: 'y4-2', src: p('cse-wall-group.jpg'), caption: 'Department of CSE — our wall, our people.', tags: ['farewell', 'friends'], year: '4', polaroid: true, rotate: 3, location: 'auditorium' },
-      { id: 'y4-3', src: p('batch-mega.jpg'), caption: 'The whole batch — one frame, forever.', tags: ['farewell', 'friends'], year: '4' },
+      { id: 'y4-1', src: p('featured/feat-final.jpg'), caption: 'Signed shirts. One last classroom family portrait.', tags: ['farewell', 'friends'], year: '4' },
+      { id: 'y4-2', src: p('featured/feat-signed-batch.jpg'), caption: 'Ink on blue — every message a forever.', tags: ['farewell', 'friends'], year: '4', polaroid: true, rotate: 2 },
+      { id: 'y4-3', src: p('featured/feat-farewell-a.jpg'), caption: 'Festive streamers. Six hearts. One batch.', tags: ['farewell', 'friends'], year: '4' },
     ],
   },
 ]
 
+/** Featured Folder shots lead the archive so the farewell frames dominate. */
 export const gallery = [
+  { id: 'f1', src: p('featured/feat-final.jpg'), caption: 'Signed shirts. One classroom. Forever family.', tags: ['farewell', 'friends'], year: '4' },
+  { id: 'f2', src: p('featured/feat-signed-batch.jpg'), caption: 'Every signature a goodbye that still smiles.', tags: ['farewell', 'friends'], year: '4' },
+  { id: 'f3', src: p('featured/feat-class-pose.jpg'), caption: 'Last-day energy in matching blue.', tags: ['farewell', 'candid'], year: '4' },
+  { id: 'f4', src: p('featured/feat-campus-wide.jpg'), caption: 'Basketball court. Full batch. Red building behind us.', tags: ['friends', 'college-fest'], year: '3' },
+  { id: 'f5', src: p('featured/feat-outdoor-batch.jpg'), caption: 'Outdoor light. Batch-wide belonging.', tags: ['friends', 'candid'], year: '3' },
+  { id: 'f6', src: p('featured/feat-celebration.jpg'), caption: 'Celebration frame — the day we dressed like joy.', tags: ['farewell', 'college-fest'], year: '4' },
+  { id: 'f7', src: p('featured/feat-farewell-a.jpg'), caption: 'Streamers, kurtas, sarees — farewell mode on.', tags: ['farewell', 'friends'], year: '4' },
+  { id: 'f8', src: p('featured/feat-farewell-b.jpg'), caption: 'Another angle of the same forever.', tags: ['farewell', 'friends'], year: '4' },
+  { id: 'f9', src: p('featured/feat-portrait-group.jpg'), caption: 'Four friends. Festive door. Perfect timing.', tags: ['friends', 'candid'], year: '4', polaroid: true, rotate: -2 },
+  { id: 'f10', src: p('featured/feat-squad-a.jpg'), caption: 'Squad assembled — soft light, hard bond.', tags: ['friends', 'trips'], year: '4' },
+  { id: 'f11', src: p('featured/feat-squad-b.jpg'), caption: 'Same day. Same people. Different laugh.', tags: ['friends', 'candid'], year: '4' },
+  { id: 'f12', src: p('featured/feat-moment.jpg'), caption: 'A quiet frame from the loudest years.', tags: ['candid', 'friends'], year: '4' },
   { id: 'g1', src: p('batch-mega.jpg'), caption: 'The whole batch — one frame, forever.', tags: ['friends', 'farewell'], year: '4' },
   { id: 'g2', src: p('batch-uniform.jpg'), caption: 'Blue shirts. Bright futures.', tags: ['farewell', 'friends'], year: '4' },
   { id: 'g3', src: p('batch-outdoor.jpg'), caption: 'Outdoor batch energy.', tags: ['friends', 'college-fest'], year: '3' },
@@ -129,19 +142,17 @@ export const gallery = [
   { id: 'g19', src: p('wa-event-crowd.jpg'), caption: 'Event day chaos — and we loved it.', tags: ['college-fest', 'friends'], year: '3' },
   { id: 'g20', src: p('wa-girls-talk.jpg'), caption: 'Sidewalk stories that never made the syllabus.', tags: ['friends', 'candid'], year: '3' },
   { id: 'g21', src: p('wa-seven-friends.jpg'), caption: 'Seven friends under soft evening light.', tags: ['friends', 'trips'], year: '2' },
-  { id: 'g22', src: p('wa-lawn-selfie.jpg'), caption: 'Lawn selfie. Peace signs mandatory.', tags: ['friends', 'candid'], year: '2', polaroid: true, rotate: -2 },
-  { id: 'g23', src: p('wa-lakeside-trio.jpg'), caption: 'Lakeside laughter and matching polos.', tags: ['friends', 'trips'], year: '2' },
-  { id: 'g24', src: p('wa-grass-hangout.jpg'), caption: 'March afternoon on the grass.', tags: ['friends', 'candid'], year: '2' },
-  { id: 'g25', src: p('wa-cse-selfie.jpg'), caption: 'CSE glass wall selfie — department pride.', tags: ['friends', 'faculty'], year: '3', location: 'auditorium' },
-  { id: 'g26', src: p('wa-holi.jpg'), caption: 'Holi — colors, chaos, family.', tags: ['college-fest', 'chaos'], year: '2', polaroid: true, rotate: 2 },
-  { id: 'g27', src: p('wa-campus-lawn.jpg'), caption: 'Usual spot. Unusual joy.', tags: ['friends', 'candid'], year: '3' },
-  { id: 'g28', src: p('wa-classroom-uno.jpg'), caption: 'Classroom UNO — unofficial elective.', tags: ['chaos', 'candid'], year: '1', location: 'classroom' },
-  { id: 'g29', src: p('wa-uno-table.jpg'), caption: 'Hands on the table. Cards in play.', tags: ['chaos', 'friends'], year: '1' },
-  { id: 'g30', src: p('wa-pointing-crowd.jpg'), caption: 'Point at the camera. Capture the bond.', tags: ['friends', 'candid'], year: '2' },
-  { id: 'g31', src: p('wa-seminar-batch.jpg'), caption: 'Seminar hall batch portrait.', tags: ['friends', 'faculty'], year: '3', location: 'auditorium' },
-  { id: 'g32', src: p('wa-auditorium.jpg'), caption: 'Auditorium seats. Peace signs. Present.', tags: ['college-fest', 'friends'], year: '3', location: 'auditorium' },
-  { id: 'g33', src: p('wa-fest-selfie.jpg'), caption: 'Fest crowd selfie energy.', tags: ['college-fest', 'chaos'], year: '3' },
-  { id: 'g34', src: p('wa-lab-desk.jpg'), caption: 'Lab desk lineup after class.', tags: ['first-year', 'friends'], year: '1', location: 'classroom' },
+  { id: 'g22', src: p('wa-grass-hangout.jpg'), caption: 'March afternoon on the grass.', tags: ['friends', 'candid'], year: '2' },
+  { id: 'g23', src: p('wa-cse-selfie.jpg'), caption: 'CSE glass wall selfie — department pride.', tags: ['friends', 'faculty'], year: '3', location: 'auditorium' },
+  { id: 'g24', src: p('wa-holi.jpg'), caption: 'Holi — colors, chaos, family.', tags: ['college-fest', 'chaos'], year: '2', polaroid: true, rotate: 2 },
+  { id: 'g25', src: p('wa-campus-lawn.jpg'), caption: 'Usual spot. Unusual joy.', tags: ['friends', 'candid'], year: '3' },
+  { id: 'g26', src: p('wa-classroom-uno.jpg'), caption: 'Classroom UNO — unofficial elective.', tags: ['chaos', 'candid'], year: '1', location: 'classroom' },
+  { id: 'g27', src: p('wa-uno-table.jpg'), caption: 'Hands on the table. Cards in play.', tags: ['chaos', 'friends'], year: '1' },
+  { id: 'g28', src: p('wa-pointing-crowd.jpg'), caption: 'Point at the camera. Capture the bond.', tags: ['friends', 'candid'], year: '2' },
+  { id: 'g29', src: p('wa-seminar-batch.jpg'), caption: 'Seminar hall batch portrait.', tags: ['friends', 'faculty'], year: '3', location: 'auditorium' },
+  { id: 'g30', src: p('wa-auditorium.jpg'), caption: 'Auditorium seats. Peace signs. Present.', tags: ['college-fest', 'friends'], year: '3', location: 'auditorium' },
+  { id: 'g31', src: p('wa-fest-selfie.jpg'), caption: 'Fest crowd selfie energy.', tags: ['college-fest', 'chaos'], year: '3' },
+  { id: 'g32', src: p('wa-lab-desk.jpg'), caption: 'Lab desk lineup after class.', tags: ['first-year', 'friends'], year: '1', location: 'classroom' },
 ]
 
 export const galleryFilters = [
@@ -402,29 +413,29 @@ export const video = {
   title: 'Our Farewell Film',
   subtitle: 'Four years at TINT CSE. One reel. Press play when you are ready.',
   embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0',
-  poster: p('batch-mega.jpg'),
+  poster: p('featured/feat-final.jpg'),
 }
 
 export const easterEggs = {
-  logoPhoto: p('secret-class.jpg'),
+  logoPhoto: p('featured/feat-class-pose.jpg'),
   logoCaption: 'The secret batch photo — found only by the curious.',
   audioClipNote: 'A familiar laugh from farewell day, preserved forever.',
 }
 
 export const finalePhotos = [
-  gallery.find((g) => g.id === 'g26'),
+  gallery.find((g) => g.id === 'f1'),
+  gallery.find((g) => g.id === 'f4'),
+  gallery.find((g) => g.id === 'f7'),
+  gallery.find((g) => g.id === 'f9'),
+  gallery.find((g) => g.id === 'f2'),
+  gallery.find((g) => g.id === 'f6'),
+  gallery.find((g) => g.id === 'f10'),
+  gallery.find((g) => g.id === 'f5'),
+  gallery.find((g) => g.id === 'g5'),
+  gallery.find((g) => g.id === 'g1'),
   gallery.find((g) => g.id === 'g16'),
   gallery.find((g) => g.id === 'g21'),
-  gallery.find((g) => g.id === 'g18'),
-  gallery.find((g) => g.id === 'g8'),
-  gallery.find((g) => g.id === 'g13'),
-  gallery.find((g) => g.id === 'g25'),
-  gallery.find((g) => g.id === 'g31'),
-  gallery.find((g) => g.id === 'g6'),
-  gallery.find((g) => g.id === 'g28'),
-  gallery.find((g) => g.id === 'g4'),
-  gallery.find((g) => g.id === 'g2'),
 ].filter(Boolean)
 
-export const heroImage = p('batch-mega.jpg')
+export const heroImage = p('hero.jpg')
 export const finaleGroupImage = p('finale-group.jpg')

@@ -19,11 +19,7 @@ const breakpoints = {
   0: 1,
 }
 
-const filters = [
-  ...galleryFilters.slice(0, 1),
-  { id: 'community', label: 'From the Batch' },
-  ...galleryFilters.slice(1),
-]
+const filters = galleryFilters
 
 export default function Gallery() {
   const [filter, setFilter] = useState('all')
@@ -34,7 +30,12 @@ export default function Gallery() {
   useEffect(() => {
     let cancelled = false
     fetchCommunityMemories().then((photos) => {
-      if (!cancelled) setCommunity(photos)
+      // Keep only group-looking community uploads (skip tiny / test assets)
+      if (!cancelled) {
+        setCommunity(
+          photos.filter((p) => !p.src.includes('qfsqt3vtueo2a4pdg4fg') && !p.src.includes('rzwaviavdtpjmffdqllr'))
+        )
+      }
     })
     return () => {
       cancelled = true
@@ -44,7 +45,8 @@ export default function Gallery() {
   const allPhotos = useMemo(() => {
     const ids = new Set(gallery.map((p) => p.id))
     const extras = community.filter((p) => !ids.has(p.id))
-    return [...extras, ...gallery]
+    // Featured farewell frames first, then the rest of the archive
+    return [...gallery.filter((g) => g.id.startsWith('f')), ...extras, ...gallery.filter((g) => !g.id.startsWith('f'))]
   }, [community])
 
   const filtered = useMemo(() => {
