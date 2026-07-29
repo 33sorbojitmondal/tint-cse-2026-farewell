@@ -35,6 +35,16 @@ export default function SmartImage({
           const { naturalWidth: w, naturalHeight: h } = e.currentTarget
           if (w && h) setOrientation(w >= h ? 'landscape' : 'portrait')
         }}
+        onError={(e) => {
+          const img = e.currentTarget
+          if (img.dataset.fallback === '1') return
+          img.dataset.fallback = '1'
+          img.src =
+            'data:image/svg+xml;charset=utf-8,' +
+            encodeURIComponent(
+              `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect fill="#1a1a1e" width="100%" height="100%"/><text x="50%" y="50%" fill="#c4a574" font-family="Georgia,serif" font-size="28" text-anchor="middle">Memory</text></svg>`
+            )
+        }}
         className={`h-full w-full object-contain transition duration-700 ${imgClassName}`}
       />
     </div>
