@@ -156,13 +156,21 @@ export default function HallOfMemory() {
             {!arReady && (
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#2a2418_0%,#0a0a0b_75%)]" />
             )}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/35 via-transparent to-ink/55" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/20 via-transparent to-ink/40" />
 
             {/* 3D memory layer */}
             <div className="absolute inset-0">
               <Canvas
-                camera={{ position: [0, 0, 0.1], fov: 60, near: 0.1, far: 60 }}
-                gl={{ alpha: true, antialias: true }}
+                camera={{ position: [0, 0, 0.15], fov: 58, near: 0.05, far: 40 }}
+                gl={{
+                  alpha: true,
+                  antialias: true,
+                  premultipliedAlpha: false,
+                  powerPreference: 'high-performance',
+                }}
+                onCreated={({ gl }) => {
+                  gl.setClearColor(0x000000, 0)
+                }}
                 style={{ background: 'transparent' }}
               >
                 <Suspense fallback={null}>

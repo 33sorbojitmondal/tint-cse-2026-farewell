@@ -5,19 +5,23 @@ import * as THREE from 'three'
 
 function FloatingMemory({ url, caption, index, total }) {
   const group = useRef(null)
-  const matRefs = useRef([])
   const texture = useTexture(url)
   texture.colorSpace = THREE.SRGBColorSpace
   texture.anisotropy = 8
+  texture.generateMipmaps = true
+  texture.minFilter = THREE.LinearMipmapLinearFilter
+  texture.magFilter = THREE.LinearFilter
 
-  const startZ = useMemo(() => -11 - (index % 8) * 2.6, [index])
+  // Spawn just ahead of the camera so cards are immediately readable
+  const startZ = useMemo(() => -7.5 - (index % 6) * 1.35, [index])
   const lane = useMemo(() => {
     const angle = (index / Math.max(total, 1)) * Math.PI * 2
+    const ring = 0.85 + (index % 3) * 0.45
     return {
-      x: Math.cos(angle) * (1.2 + (index % 3) * 0.55),
-      y: Math.sin(angle * 0.85) * 0.7 + (index % 2 === 0 ? 0.2 : -0.12),
-      speed: 0.48 + (index % 5) * 0.07,
-      spin: ((index % 2) * 2 - 1) * 0.04,
+      x: Math.cos(angle) * ring,
+      y: Math.sin(angle * 0.9) * 0.55 + (index % 2 === 0 ? 0.15 : -0.1),
+      speed: 0.55 + (index % 5) * 0.08,
+      spin: ((index % 2) * 2 - 1) * 0.03,
     }
   }, [index, total])
 
@@ -26,74 +30,57 @@ function FloatingMemory({ url, caption, index, total }) {
   useFrame((_, delta) => {
     if (!group.current) return
     z.current += lane.speed * delta
-    if (z.current > 2.8) z.current = startZ - 2.5
-
-    // Stay mostly opaque in the viewing zone; only soft fade at far/near edges
-    let target = 1
-    if (z.current < -9) target = THREE.MathUtils.smoothstep(z.current, -12, -8.5)
-    else if (z.current > 1.6) target = 1 - THREE.MathUtils.smoothstep(z.current, 1.6, 2.7)
-    target = THREE.MathUtils.clamp(target, 0.15, 1)
+    if (z.current > 1.2) z.current = startZ - 1.5
 
     group.current.position.set(
       lane.x,
-      lane.y + Math.sin(z.current * 0.4 + index) * 0.08,
+      lane.y + Math.sin(z.current * 0.45 + index) * 0.06,
       z.current
     )
-    group.current.rotation.z = Math.sin(z.current * 0.2 + index) * lane.spin
-
-    matRefs.current.forEach((mat) => {
-      if (!mat) return
-      mat.opacity = THREE.MathUtils.lerp(mat.opacity, target * (mat.userData.mul ?? 1), 0.12)
-    })
+    group.current.rotation.z = Math.sin(z.current * 0.22 + index) * lane.spin
+    // Soft scale-up as they approach so they feel solid and close
+    const near = THREE.MathUtils.clamp((-z.current - 0.5) / 7, 0.55, 1)
+    const scale = THREE.MathUtils.lerp(1.35, 0.85, near)
+    group.current.scale.setScalar(scale)
   })
-
-  const register = (mul = 1) => (mat) => {
-    if (!mat) return
-    mat.userData.mul = mul
-    if (!matRefs.current.includes(mat)) matRefs.current.push(mat)
-  }
 
   return (
     <group ref={group}>
       <Billboard follow>
-        {/* Soft shadow card behind */}
-        <mesh position={[0.04, -0.06, -0.03]}>
-          <planeGeometry args={[1.32, 1.6]} />
-          <meshBasicMaterial
-            ref={register(0.35)}
-            color="#000000"
-            transparent
-            opacity={0.35}
-            depthWrite={false}
-          />
+        {/* Drop shadow — only this layer uses transparency */}
+        <mesh position={[0.05, -0.07, -0.04]}>
+          <planeGeometry args={[1.55, 1.85]} />
+          <meshBasicMaterial color="#000000" transparent opacity={0.45} depthWrite={false} />
         </mesh>
-        {/* Polaroid frame — fully solid */}
+
+        {/* Polaroid frame — fully opaque (no transparent blending) */}
         <mesh position={[0, -0.02, -0.01]}>
-          <planeGeometry args={[1.32, 1.58]} />
-          <meshBasicMaterial ref={register(1)} color="#f5f0e8" transparent opacity={1} />
+          <planeGeometry args={[1.48, 1.78]} />
+          <meshBasicMaterial color="#f7f2ea" toneMapped={false} depthWrite />
         </mesh>
-        {/* Photo — fully opaque */}
-        <mesh position={[0, 0.08, 0.02]}>
-          <planeGeometry args={[1.14, 1.22]} />
+
+        {/* Photo — fully opaque so it reads clearly over the camera */}
+        <mesh position={[0, 0.1, 0.02]}>
+          <planeGeometry args={[1.28, 1.36]} />
           <meshBasicMaterial
-            ref={register(1)}
             map={texture}
-            transparent
-            opacity={1}
             toneMapped={false}
             depthWrite
+            side={THREE.FrontSide}
           />
         </mesh>
+
         <Text
-          position={[0, -0.7, 0.03]}
-          fontSize={0.052}
-          maxWidth={1.12}
-          color="#2a2418"
+          position={[0, -0.78, 0.04]}
+          fontSize={0.058}
+          maxWidth={1.25}
+          color="#1f1a12"
           anchorX="center"
           anchorY="middle"
           fillOpacity={1}
+          outlineWidth={0}
         >
-          {caption.length > 36 ? `${caption.slice(0, 34)}…` : caption}
+          {caption.length > 34 ? `${caption.slice(0, 32)}…` : caption}
         </Text>
       </Billboard>
     </group>
@@ -103,17 +90,17 @@ function FloatingMemory({ url, caption, index, total }) {
 function Dust() {
   const ref = useRef(null)
   const positions = useMemo(() => {
-    const arr = new Float32Array(80 * 3)
-    for (let i = 0; i < 80; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 12
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 7
-      arr[i * 3 + 2] = -Math.random() * 22
+    const arr = new Float32Array(60 * 3)
+    for (let i = 0; i < 60; i++) {
+      arr[i * 3] = (Math.random() - 0.5) * 10
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 6
+      arr[i * 3 + 2] = -1 - Math.random() * 12
     }
     return arr
   }, [])
 
   useFrame((_, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.02
+    if (ref.current) ref.current.rotation.y += delta * 0.015
   })
 
   return (
@@ -122,10 +109,10 @@ function Dust() {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.022}
+        size={0.02}
         color="#c4a574"
         transparent
-        opacity={0.28}
+        opacity={0.22}
         depthWrite={false}
         sizeAttenuation
       />
@@ -134,11 +121,12 @@ function Dust() {
 }
 
 export default function MemoryScene({ photos }) {
-  const items = useMemo(() => photos.slice(0, 14), [photos])
+  const items = useMemo(() => photos.slice(0, 12), [photos])
 
   return (
     <>
-      <ambientLight intensity={1.5} />
+      <ambientLight intensity={1.85} />
+      <directionalLight position={[2, 3, 4]} intensity={0.55} />
       <Dust />
       {items.map((photo, i) => (
         <FloatingMemory
