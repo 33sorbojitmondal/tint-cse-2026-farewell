@@ -40,15 +40,15 @@ export const playlist = [
 ]
 
 /**
- * AR Hall mix — Woh Din for farewell group frames.
- * startAt cues past the intro into the nostalgic swell (DJ drop for the set).
+ * AR Hall soundtrack — 2-minute mashup of farewell hooks with crossfades.
+ * Built from Kabira → Yaaron → Iktara → Ilahi → Tera Yaar → Woh Din → Behti Hawa → Khaabon.
  */
 export const hallSoundtrack = {
-  id: 'woh-din',
-  title: 'Woh Din',
-  src: '/audio/woh-din.mp3',
-  startAt: 48,
-  volume: 0.38,
+  id: 'hall-mashup',
+  title: 'Farewell Mix · 2 min',
+  src: '/audio/hall-mashup.mp3',
+  startAt: 0,
+  volume: 0.4,
 }
 
 export const creators = [

@@ -34,11 +34,6 @@ function useHallMusic(active) {
     audioRef.current = audio
 
     const start = () => {
-      try {
-        audio.currentTime = track.startAt ?? 0
-      } catch {
-        /* ignore seek failures on slow loads */
-      }
       audio.play().catch(() => {})
     }
 
@@ -66,13 +61,20 @@ export default function HallOfMemory() {
   const videoRef = useRef(null)
   const streamRef = useRef(null)
 
-  // Farewell Folder frames first — the shots that should dominate the hall
+  // Featured farewell frames + a few more group archive shots, spaced for the hall
   const photos = useMemo(() => {
-    const featured = gallery.filter((g) => g.id.startsWith('f'))
-    if (featured.length >= 6) return featured
-    return gallery.filter(
-      (g) => g.tags.includes('farewell') || g.tags.includes('friends')
-    )
+    const featured = gallery.filter((g) => g.id.startsWith('f')).map((g) => ({ ...g, landscape: true }))
+    const extras = gallery
+      .filter(
+        (g) =>
+          !g.id.startsWith('f') &&
+          (g.tags.includes('farewell') || g.tags.includes('friends')) &&
+          !g.src.includes('duo') &&
+          !g.src.includes('selfie-duo')
+      )
+      .slice(0, 4)
+      .map((g) => ({ ...g, landscape: true }))
+    return [...featured.slice(0, 6), ...extras].slice(0, 9)
   }, [])
 
   const { muted, setMuted, track } = useHallMusic(open)
@@ -131,7 +133,7 @@ export default function HallOfMemory() {
         <SectionHeading
           eyebrow="Augmented Memory"
           title="Hall of Memory"
-          subtitle="Step into the set — farewell frames drift in on Woh Din, cued to the swell."
+          subtitle="Step into the set — angled group frames drift in on a 2-minute farewell mashup."
         />
 
         <motion.button
