@@ -39,6 +39,18 @@ export const playlist = [
   { id: 'khaabon', title: 'Khaabon Ke Parinday', src: '/audio/khaabon-ke-parinday.mp3' },
 ]
 
+/**
+ * AR Hall mix — Woh Din for farewell group frames.
+ * startAt cues past the intro into the nostalgic swell (DJ drop for the set).
+ */
+export const hallSoundtrack = {
+  id: 'woh-din',
+  title: 'Woh Din',
+  src: '/audio/woh-din.mp3',
+  startAt: 48,
+  volume: 0.38,
+}
+
 export const creators = [
   {
     id: 'piyush',
@@ -408,13 +420,6 @@ export const faculty = [
     note: 'These buildings held our chaos, our growth, and our friendships. A part of us will always be here.',
   },
 ]
-
-export const video = {
-  title: 'Our Farewell Film',
-  subtitle: 'Four years at TINT CSE. One reel. Press play when you are ready.',
-  embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0',
-  poster: p('featured/feat-final.jpg'),
-}
 
 export const easterEggs = {
   logoPhoto: p('featured/feat-class-pose.jpg'),

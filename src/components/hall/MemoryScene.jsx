@@ -3,6 +3,10 @@ import { useFrame } from '@react-three/fiber'
 import { Billboard, Text, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 
+/**
+ * One memory card — landscape polaroid for group farewell frames.
+ * Slow approach toward camera so each shot reads like a beat drop.
+ */
 function FloatingMemory({ url, caption, index, total }) {
   const group = useRef(null)
   const texture = useTexture(url)
@@ -12,95 +16,89 @@ function FloatingMemory({ url, caption, index, total }) {
   texture.minFilter = THREE.LinearMipmapLinearFilter
   texture.magFilter = THREE.LinearFilter
 
-  // Spawn just ahead of the camera so cards are immediately readable
-  const startZ = useMemo(() => -7.5 - (index % 6) * 1.35, [index])
+  // Staggered lanes in a soft arc — not a chaotic swarm
   const lane = useMemo(() => {
-    const angle = (index / Math.max(total, 1)) * Math.PI * 2
-    const ring = 0.85 + (index % 3) * 0.45
+    const t = index / Math.max(total - 1, 1)
+    const spread = (t - 0.5) * 2.4
     return {
-      x: Math.cos(angle) * ring,
-      y: Math.sin(angle * 0.9) * 0.55 + (index % 2 === 0 ? 0.15 : -0.1),
-      speed: 0.55 + (index % 5) * 0.08,
-      spin: ((index % 2) * 2 - 1) * 0.03,
+      x: spread + (index % 2 === 0 ? -0.15 : 0.15),
+      y: (index % 3) * 0.28 - 0.28,
+      startZ: -9.5 - (index % 4) * 1.8,
+      speed: 0.32 + (index % 3) * 0.04,
+      sway: 0.04 + (index % 2) * 0.02,
     }
   }, [index, total])
 
-  const z = useRef(startZ)
+  const z = useRef(lane.startZ)
 
   useFrame((_, delta) => {
     if (!group.current) return
     z.current += lane.speed * delta
-    if (z.current > 1.2) z.current = startZ - 1.5
+    if (z.current > 0.9) z.current = lane.startZ - 1.2
+
+    const depth = -z.current
+    const scale = THREE.MathUtils.clamp(1.15 + (8 - depth) * 0.08, 0.85, 1.55)
 
     group.current.position.set(
-      lane.x,
-      lane.y + Math.sin(z.current * 0.45 + index) * 0.06,
+      lane.x + Math.sin(z.current * 0.35 + index) * lane.sway,
+      lane.y + Math.cos(z.current * 0.28 + index) * 0.05,
       z.current
     )
-    group.current.rotation.z = Math.sin(z.current * 0.22 + index) * lane.spin
-    // Soft scale-up as they approach so they feel solid and close
-    const near = THREE.MathUtils.clamp((-z.current - 0.5) / 7, 0.55, 1)
-    const scale = THREE.MathUtils.lerp(1.35, 0.85, near)
+    group.current.rotation.z = Math.sin(z.current * 0.15 + index) * 0.025
     group.current.scale.setScalar(scale)
   })
+
+  // Landscape polaroid proportions for batch group shots
+  const frameW = 1.72
+  const frameH = 1.28
+  const photoW = 1.52
+  const photoH = 0.98
 
   return (
     <group ref={group}>
       <Billboard follow>
-        {/* Drop shadow — only this layer uses transparency */}
-        <mesh position={[0.05, -0.07, -0.04]}>
-          <planeGeometry args={[1.55, 1.85]} />
-          <meshBasicMaterial color="#000000" transparent opacity={0.45} depthWrite={false} />
+        <mesh position={[0.05, -0.05, -0.035]}>
+          <planeGeometry args={[frameW + 0.04, frameH + 0.04]} />
+          <meshBasicMaterial color="#000000" transparent opacity={0.4} depthWrite={false} />
         </mesh>
-
-        {/* Polaroid frame — fully opaque (no transparent blending) */}
         <mesh position={[0, -0.02, -0.01]}>
-          <planeGeometry args={[1.48, 1.78]} />
-          <meshBasicMaterial color="#f7f2ea" toneMapped={false} depthWrite />
+          <planeGeometry args={[frameW, frameH]} />
+          <meshBasicMaterial color="#f4efe6" toneMapped={false} depthWrite />
         </mesh>
-
-        {/* Photo — fully opaque so it reads clearly over the camera */}
-        <mesh position={[0, 0.1, 0.02]}>
-          <planeGeometry args={[1.28, 1.36]} />
-          <meshBasicMaterial
-            map={texture}
-            toneMapped={false}
-            depthWrite
-            side={THREE.FrontSide}
-          />
+        <mesh position={[0, 0.06, 0.02]}>
+          <planeGeometry args={[photoW, photoH]} />
+          <meshBasicMaterial map={texture} toneMapped={false} depthWrite side={THREE.FrontSide} />
         </mesh>
-
         <Text
-          position={[0, -0.78, 0.04]}
-          fontSize={0.058}
-          maxWidth={1.25}
+          position={[0, -0.52, 0.03]}
+          fontSize={0.048}
+          maxWidth={1.5}
           color="#1f1a12"
           anchorX="center"
           anchorY="middle"
           fillOpacity={1}
-          outlineWidth={0}
         >
-          {caption.length > 34 ? `${caption.slice(0, 32)}…` : caption}
+          {caption.length > 40 ? `${caption.slice(0, 38)}…` : caption}
         </Text>
       </Billboard>
     </group>
   )
 }
 
-function Dust() {
+function SoftDust() {
   const ref = useRef(null)
   const positions = useMemo(() => {
-    const arr = new Float32Array(60 * 3)
-    for (let i = 0; i < 60; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 10
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 6
-      arr[i * 3 + 2] = -1 - Math.random() * 12
+    const arr = new Float32Array(40 * 3)
+    for (let i = 0; i < 40; i++) {
+      arr[i * 3] = (Math.random() - 0.5) * 8
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 5
+      arr[i * 3 + 2] = -2 - Math.random() * 10
     }
     return arr
   }, [])
 
   useFrame((_, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.015
+    if (ref.current) ref.current.rotation.y += delta * 0.012
   })
 
   return (
@@ -109,10 +107,10 @@ function Dust() {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.02}
+        size={0.018}
         color="#c4a574"
         transparent
-        opacity={0.22}
+        opacity={0.18}
         depthWrite={false}
         sizeAttenuation
       />
@@ -121,13 +119,14 @@ function Dust() {
 }
 
 export default function MemoryScene({ photos }) {
-  const items = useMemo(() => photos.slice(0, 12), [photos])
+  // Fewer, stronger frames — like a setlist, not a pile
+  const items = useMemo(() => photos.slice(0, 8), [photos])
 
   return (
     <>
-      <ambientLight intensity={1.85} />
-      <directionalLight position={[2, 3, 4]} intensity={0.55} />
-      <Dust />
+      <ambientLight intensity={1.7} />
+      <directionalLight position={[1.5, 2.5, 3]} intensity={0.45} />
+      <SoftDust />
       {items.map((photo, i) => (
         <FloatingMemory
           key={`${photo.id}-${i}`}

@@ -8,7 +8,6 @@ import Stats from './components/Stats'
 import Awards from './components/Awards'
 import Gallery from './components/Gallery'
 import HallOfMemory from './components/HallOfMemory'
-import VideoSection from './components/VideoSection'
 import Creators from './components/Creators'
 import Finale from './components/Finale'
 import BestOfLuck from './components/BestOfLuck'
@@ -44,7 +43,6 @@ export default function App() {
         <Awards />
         <Gallery />
         <HallOfMemory />
-        <VideoSection />
         <Creators />
         <Finale />
         <BestOfLuck />

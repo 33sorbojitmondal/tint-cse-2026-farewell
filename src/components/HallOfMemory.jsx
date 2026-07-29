@@ -3,40 +3,54 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Scan, Sparkles, Volume2, VolumeX, X } from 'lucide-react'
-import { gallery, playlist, site } from '../data/content'
+import { gallery, hallSoundtrack, site } from '../data/content'
 import { SectionHeading } from './ui'
 import MemoryScene from './hall/MemoryScene'
 
+/**
+ * Curated hall mix — one emotional spine track with a DJ cue into the swell.
+ * Site ambient audio is paused while the hall is open so the set doesn't clash.
+ */
 function useHallMusic(active) {
   const audioRef = useRef(null)
   const [muted, setMuted] = useState(false)
-  const [trackIndex, setTrackIndex] = useState(0)
-  const track = playlist[trackIndex] || playlist[0]
+  const track = hallSoundtrack
 
   useEffect(() => {
-    if (!active) {
+    if (!active || !track) {
       audioRef.current?.pause()
       if (audioRef.current) audioRef.current.currentTime = 0
       return
     }
 
+    // Duck / pause any other page audio so the hall mix owns the room
+    document.querySelectorAll('audio').forEach((el) => {
+      if (el !== audioRef.current) el.pause()
+    })
+
     const audio = new Audio(track.src)
-    audio.volume = 0.34
+    audio.volume = track.volume ?? 0.36
+    audio.loop = true
     audioRef.current = audio
 
-    const onEnded = () => {
-      setTrackIndex((i) => (i + 1) % playlist.length)
+    const start = () => {
+      try {
+        audio.currentTime = track.startAt ?? 0
+      } catch {
+        /* ignore seek failures on slow loads */
+      }
+      audio.play().catch(() => {})
     }
-    audio.addEventListener('ended', onEnded)
 
-    audio.play().catch(() => {})
+    if (audio.readyState >= 1) start()
+    else audio.addEventListener('loadedmetadata', start, { once: true })
 
     return () => {
-      audio.removeEventListener('ended', onEnded)
       audio.pause()
       audio.src = ''
+      audioRef.current = null
     }
-  }, [active, track?.src])
+  }, [active, track])
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.muted = muted
@@ -51,16 +65,16 @@ export default function HallOfMemory() {
   const [arError, setArError] = useState('')
   const videoRef = useRef(null)
   const streamRef = useRef(null)
-  const photos = useMemo(
-    () =>
-      gallery.filter(
-        (g) =>
-          g.tags.includes('friends') ||
-          g.tags.includes('farewell') ||
-          g.tags.includes('college-fest')
-      ),
-    []
-  )
+
+  // Farewell Folder frames first — the shots that should dominate the hall
+  const photos = useMemo(() => {
+    const featured = gallery.filter((g) => g.id.startsWith('f'))
+    if (featured.length >= 6) return featured
+    return gallery.filter(
+      (g) => g.tags.includes('farewell') || g.tags.includes('friends')
+    )
+  }, [])
+
   const { muted, setMuted, track } = useHallMusic(open)
 
   useEffect(() => {
@@ -78,7 +92,11 @@ export default function HallOfMemory() {
     ;(async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
           audio: false,
         })
         if (cancelled) {
@@ -88,12 +106,13 @@ export default function HallOfMemory() {
         streamRef.current = stream
         if (videoRef.current) {
           videoRef.current.srcObject = stream
+          videoRef.current.setAttribute('playsinline', 'true')
           await videoRef.current.play()
         }
         setArReady(true)
         setArError('')
       } catch {
-        setArError('Camera unavailable — immersive hall mode is still on.')
+        setArError('Camera unavailable — hall mode still runs with the memory set.')
         setArReady(false)
       }
     })()
@@ -112,7 +131,7 @@ export default function HallOfMemory() {
         <SectionHeading
           eyebrow="Augmented Memory"
           title="Hall of Memory"
-          subtitle="Step into an AR hall where batch photographs drift toward you — with soft music in the background."
+          subtitle="Step into the set — farewell frames drift in on Woh Din, cued to the swell."
         />
 
         <motion.button
@@ -143,7 +162,6 @@ export default function HallOfMemory() {
             aria-modal="true"
             aria-label="Hall of Memory AR experience"
           >
-            {/* AR camera layer */}
             <video
               ref={videoRef}
               playsInline
@@ -156,12 +174,12 @@ export default function HallOfMemory() {
             {!arReady && (
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#2a2418_0%,#0a0a0b_75%)]" />
             )}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/20 via-transparent to-ink/40" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/25 via-transparent to-ink/45" />
 
-            {/* 3D memory layer */}
             <div className="absolute inset-0">
               <Canvas
-                camera={{ position: [0, 0, 0.15], fov: 58, near: 0.05, far: 40 }}
+                camera={{ position: [0, 0.05, 0.2], fov: 55, near: 0.05, far: 40 }}
+                dpr={[1, 1.75]}
                 gl={{
                   alpha: true,
                   antialias: true,
@@ -178,19 +196,20 @@ export default function HallOfMemory() {
                   <OrbitControls
                     enableZoom={false}
                     enablePan={false}
-                    maxPolarAngle={Math.PI * 0.72}
-                    minPolarAngle={Math.PI * 0.28}
-                    rotateSpeed={0.55}
+                    maxPolarAngle={Math.PI * 0.7}
+                    minPolarAngle={Math.PI * 0.3}
+                    rotateSpeed={0.45}
                   />
                 </Suspense>
               </Canvas>
             </div>
 
-            {/* HUD */}
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-4 md:p-6">
               <div>
                 <p className="text-[10px] tracking-[0.3em] uppercase text-accent">Hall of Memory</p>
-                <p className="mt-1 font-display text-xl text-cream md:text-2xl">{site.collegeShort} · {site.batchYear}</p>
+                <p className="mt-1 font-display text-xl text-cream md:text-2xl">
+                  {site.collegeShort} · {site.batchYear}
+                </p>
                 {arError && <p className="mt-2 max-w-xs text-xs text-cream-muted">{arError}</p>}
               </div>
               <div className="pointer-events-auto flex gap-2">
