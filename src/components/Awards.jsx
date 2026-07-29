@@ -41,9 +41,6 @@ export default function Awards() {
                     alt={award.name}
                     className="h-full w-full object-cover object-center transition duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute left-1/2 top-3 -translate-x-1/2 rounded-full border border-accent/40 bg-ink/80 px-2.5 py-0.5 text-[9px] tracking-[0.2em] uppercase text-accent backdrop-blur-sm">
-                    {award.section}
-                  </div>
                 </div>
 
                 <div className="px-5 pb-2 pt-5 text-center">
