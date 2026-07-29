@@ -3,11 +3,13 @@ import { useFrame } from '@react-three/fiber'
 import { Text, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 
+const RING_Y = 0.05
+const RING_RADIUS = 3.35
+
 /**
- * Angled polaroid — fixed tilt (no billboard) so cards sit in space
- * with clear gaps instead of stacking face-on over each other.
+ * One polaroid on the panorama ring — same eye level, facing the viewer at the center.
  */
-function FloatingMemory({ url, caption, index, total, landscape }) {
+function RingMemory({ url, caption, index, total, landscape, orbitRef }) {
   const group = useRef(null)
   const texture = useTexture(url)
   texture.colorSpace = THREE.SRGBColorSpace
@@ -16,56 +18,38 @@ function FloatingMemory({ url, caption, index, total, landscape }) {
   texture.minFilter = THREE.LinearMipmapLinearFilter
   texture.magFilter = THREE.LinearFilter
 
-  const lane = useMemo(() => {
-    // Fan across a wide arc so neighbors barely kiss
-    const t = index / Math.max(total - 1, 1)
-    const fan = (t - 0.5) * Math.PI * 0.95
-    const ring = 2.85 + (index % 3) * 0.35
-    const yaw = fan * 0.55 + ((index % 2) * 2 - 1) * 0.12
-    const roll = ((index % 2) * 2 - 1) * (0.1 + (index % 3) * 0.05)
+  const slot = useMemo(() => {
+    const angle = (index / Math.max(total, 1)) * Math.PI * 2
     return {
-      baseX: Math.sin(fan) * ring,
-      baseY: ((index % 3) - 1) * 0.55,
-      startZ: -5.5 - Math.cos(fan) * 2.2 - (index % 4) * 1.6,
-      speed: 0.28 + (index % 3) * 0.035,
-      yaw,
-      roll,
+      angle,
+      x: Math.sin(angle) * RING_RADIUS,
+      z: -Math.cos(angle) * RING_RADIUS,
     }
   }, [index, total])
 
-  const z = useRef(lane.startZ)
-
-  useFrame((_, delta) => {
+  useFrame(() => {
     if (!group.current) return
-    z.current += lane.speed * delta
-    if (z.current > 0.4) z.current = lane.startZ - 2
-
-    // Soft approach scale — never huge enough to eat the whole view
-    const depth = Math.max(-z.current, 0.5)
-    const scale = THREE.MathUtils.clamp(0.72 + (6.5 - depth) * 0.05, 0.65, 1.05)
-
-    group.current.position.set(
-      lane.baseX + Math.sin(z.current * 0.25 + index) * 0.06,
-      lane.baseY + Math.cos(z.current * 0.2 + index) * 0.04,
-      z.current
-    )
-    group.current.rotation.set(0, lane.yaw, lane.roll)
-    group.current.scale.setScalar(scale)
+    // Keep facing the center so turning the camera always reads the photo
+    group.current.lookAt(0, RING_Y, 0)
   })
 
-  const frameW = landscape ? 1.58 : 1.22
-  const frameH = landscape ? 1.18 : 1.48
-  const photoW = landscape ? 1.4 : 1.04
-  const photoH = landscape ? 0.9 : 1.12
-  const captionY = landscape ? -0.48 : -0.62
+  const frameW = landscape ? 1.55 : 1.2
+  const frameH = landscape ? 1.15 : 1.45
+  const photoW = landscape ? 1.38 : 1.02
+  const photoH = landscape ? 0.88 : 1.1
+  const captionY = landscape ? -0.46 : -0.6
 
   return (
-    <group ref={group}>
-      <mesh position={[0.04, -0.045, -0.03]}>
+    <group
+      ref={group}
+      position={[slot.x, RING_Y, slot.z]}
+      // Parent orbitRef rotates the whole panorama
+    >
+      <mesh position={[0.03, -0.04, -0.025]}>
         <planeGeometry args={[frameW + 0.04, frameH + 0.04]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.35} depthWrite={false} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.32} depthWrite={false} />
       </mesh>
-      <mesh position={[0, -0.015, -0.01]}>
+      <mesh position={[0, -0.01, -0.01]}>
         <planeGeometry args={[frameW, frameH]} />
         <meshBasicMaterial color="#f4efe6" toneMapped={false} depthWrite />
       </mesh>
@@ -75,14 +59,14 @@ function FloatingMemory({ url, caption, index, total, landscape }) {
       </mesh>
       <Text
         position={[0, captionY, 0.03]}
-        fontSize={0.042}
-        maxWidth={frameW - 0.16}
+        fontSize={0.04}
+        maxWidth={frameW - 0.14}
         color="#1f1a12"
         anchorX="center"
         anchorY="middle"
         fillOpacity={1}
       >
-        {caption.length > 36 ? `${caption.slice(0, 34)}…` : caption}
+        {caption.length > 34 ? `${caption.slice(0, 32)}…` : caption}
       </Text>
     </group>
   )
@@ -91,17 +75,19 @@ function FloatingMemory({ url, caption, index, total, landscape }) {
 function SoftDust() {
   const ref = useRef(null)
   const positions = useMemo(() => {
-    const arr = new Float32Array(36 * 3)
-    for (let i = 0; i < 36; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 9
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 5
-      arr[i * 3 + 2] = -2 - Math.random() * 11
+    const arr = new Float32Array(48 * 3)
+    for (let i = 0; i < 48; i++) {
+      const a = Math.random() * Math.PI * 2
+      const r = 1.2 + Math.random() * 4
+      arr[i * 3] = Math.sin(a) * r
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 2.2
+      arr[i * 3 + 2] = -Math.cos(a) * r
     }
     return arr
   }, [])
 
   useFrame((_, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.01
+    if (ref.current) ref.current.rotation.y += delta * 0.02
   })
 
   return (
@@ -110,10 +96,10 @@ function SoftDust() {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.016}
+        size={0.015}
         color="#c4a574"
         transparent
-        opacity={0.16}
+        opacity={0.15}
         depthWrite={false}
         sizeAttenuation
       />
@@ -121,24 +107,36 @@ function SoftDust() {
   )
 }
 
+/**
+ * Circular panorama of memories at one shared eye level.
+ * The ring slowly turns; the user looks around from the center.
+ */
 export default function MemoryScene({ photos }) {
-  const items = useMemo(() => photos.slice(0, 9), [photos])
+  const orbit = useRef(null)
+  const items = useMemo(() => photos.slice(0, 10), [photos])
+
+  useFrame((_, delta) => {
+    if (orbit.current) orbit.current.rotation.y += delta * 0.045
+  })
 
   return (
     <>
-      <ambientLight intensity={1.65} />
-      <directionalLight position={[2, 2.5, 3]} intensity={0.4} />
+      <ambientLight intensity={1.7} />
+      <directionalLight position={[2, 3, 2]} intensity={0.4} />
       <SoftDust />
-      {items.map((photo, i) => (
-        <FloatingMemory
-          key={`${photo.id}-${i}`}
-          url={photo.src}
-          caption={photo.caption}
-          index={i}
-          total={items.length}
-          landscape={photo.landscape !== false}
-        />
-      ))}
+      <group ref={orbit}>
+        {items.map((photo, i) => (
+          <RingMemory
+            key={`${photo.id}-${i}`}
+            url={photo.src}
+            caption={photo.caption}
+            index={i}
+            total={items.length}
+            landscape={photo.landscape !== false}
+            orbitRef={orbit}
+          />
+        ))}
+      </group>
     </>
   )
 }

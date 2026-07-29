@@ -186,7 +186,7 @@ export default function HallOfMemory() {
         <SectionHeading
           eyebrow="Augmented Memory"
           title="Hall of Memory"
-          subtitle="Step into the set — angled group frames drift in on a 2-minute farewell mashup."
+          subtitle="Stand in the middle of a circular memory panorama — turn around to see every frame."
         />
 
         <motion.button
@@ -202,7 +202,7 @@ export default function HallOfMemory() {
         </motion.button>
 
         <p className="mt-4 text-xs text-cream-dim">
-          Allows camera for AR view · Music starts when you enter · Drag or swipe to look around
+          Allows camera for AR view · Music starts when you enter · Turn / swipe to look around
         </p>
       </div>
 
@@ -235,7 +235,7 @@ export default function HallOfMemory() {
 
             <div className="absolute inset-0 touch-none" style={{ touchAction: 'none' }}>
               <Canvas
-                camera={{ position: [0, 0.05, 0.2], fov: isMobile ? 60 : 55, near: 0.05, far: 40 }}
+                camera={{ position: [0, 0.05, 0.01], fov: isMobile ? 68 : 62, near: 0.05, far: 40 }}
                 dpr={isMobile ? [1, 1.25] : [1, 1.75]}
                 gl={{
                   alpha: true,
@@ -255,9 +255,10 @@ export default function HallOfMemory() {
                     enablePan={false}
                     enableDamping
                     dampingFactor={0.08}
-                    maxPolarAngle={Math.PI * 0.72}
-                    minPolarAngle={Math.PI * 0.28}
-                    rotateSpeed={isMobile ? 0.7 : 0.45}
+                    target={[0, 0.05, 0]}
+                    maxPolarAngle={Math.PI * 0.65}
+                    minPolarAngle={Math.PI * 0.35}
+                    rotateSpeed={isMobile ? 0.85 : 0.55}
                   />
                 </Suspense>
               </Canvas>
@@ -293,7 +294,7 @@ export default function HallOfMemory() {
 
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center md:p-8">
               <p className="font-display text-base italic text-cream/90 md:text-xl">
-                Memories are walking toward you…
+                Turn around — memories circle you…
               </p>
               {track && (
                 <p className="mt-2 text-xs tracking-wide text-accent">♪ {track.title}</p>
