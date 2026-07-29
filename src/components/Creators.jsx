@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { creators } from '../data/content'
-import { LazyImage, SectionHeading } from './ui'
+import { LazyImage } from './ui'
 
 export default function Creators() {
   return (
@@ -9,12 +9,6 @@ export default function Creators() {
       className="border-t border-ink-border/40 bg-ink-soft px-5 py-16 md:px-8 md:py-20"
     >
       <div className="mx-auto max-w-2xl">
-        <SectionHeading
-          eyebrow="Made With Love"
-          title="Creators"
-          subtitle="Crafted by two friends from the batch."
-        />
-
         <div className="flex flex-wrap items-start justify-center gap-10 sm:gap-14">
           {creators.map((person, i) => (
             <motion.article
