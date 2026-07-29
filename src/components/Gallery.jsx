@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Masonry from 'react-masonry-css'
 import { motion } from 'framer-motion'
 import Lightbox from 'yet-another-react-lightbox'
@@ -7,7 +7,9 @@ import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
 import 'yet-another-react-lightbox/styles.css'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'
 import { gallery, galleryFilters } from '../data/content'
+import { fetchCommunityMemories } from '../lib/cloudinary'
 import { LazyImage, SectionHeading } from './ui'
+import MemoryUpload from './MemoryUpload'
 
 const PAGE_SIZE = 12
 
@@ -18,15 +20,38 @@ const breakpoints = {
   0: 1,
 }
 
+const filters = [
+  ...galleryFilters.slice(0, 1),
+  { id: 'community', label: 'From the Batch' },
+  ...galleryFilters.slice(1),
+]
+
 export default function Gallery() {
   const [filter, setFilter] = useState('all')
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [index, setIndex] = useState(-1)
+  const [community, setCommunity] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+    fetchCommunityMemories().then((photos) => {
+      if (!cancelled) setCommunity(photos)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const allPhotos = useMemo(() => {
+    const ids = new Set(gallery.map((p) => p.id))
+    const extras = community.filter((p) => !ids.has(p.id))
+    return [...extras, ...gallery]
+  }, [community])
 
   const filtered = useMemo(() => {
-    if (filter === 'all') return gallery
-    return gallery.filter((p) => p.tags.includes(filter))
-  }, [filter])
+    if (filter === 'all') return allPhotos
+    return allPhotos.filter((p) => p.tags.includes(filter))
+  }, [filter, allPhotos])
 
   const shown = filtered.slice(0, visible)
 
@@ -40,17 +65,25 @@ export default function Gallery() {
     [filtered]
   )
 
+  const handleUploaded = (photo) => {
+    setCommunity((prev) => [photo, ...prev.filter((p) => p.id !== photo.id)])
+    setFilter('community')
+    setVisible(PAGE_SIZE)
+  }
+
   return (
     <section id="memories" className="book-perspective px-5 py-[var(--spacing-section)] md:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="The Archive"
           title="Memories"
-          subtitle="An editorial collage of the moments that refuse to fade. Filter, wander, open, remember."
+          subtitle="An editorial collage of the moments that refuse to fade — plus new ones the batch uploads."
         />
 
+        <MemoryUpload onUploaded={handleUploaded} />
+
         <div className="mb-10 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {galleryFilters.map((f) => (
+          {filters.map((f) => (
             <button
               key={f.id}
               type="button"
@@ -94,6 +127,11 @@ export default function Gallery() {
                   : undefined
               }
             >
+              {photo.fromCloudinary && (
+                <span className="absolute left-3 top-3 z-10 rounded-full border border-accent/40 bg-ink/75 px-2 py-0.5 text-[9px] tracking-[0.18em] uppercase text-accent backdrop-blur-sm">
+                  Batch upload
+                </span>
+              )}
               <LazyImage
                 src={photo.src}
                 alt={photo.caption}
