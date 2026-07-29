@@ -13,11 +13,11 @@ export default function Hero() {
         <img
           src={heroImage}
           alt=""
-          className="h-full w-full scale-105 object-cover opacity-55"
+          className="h-full w-full scale-105 object-cover object-[center_35%] opacity-60"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/45 to-ink" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#0a0a0b_78%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/40 to-ink" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_10%,#0a0a0b_80%)]" />
       </div>
 
       {/* Floating particles */}
